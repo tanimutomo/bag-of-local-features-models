@@ -1,0 +1,7 @@
+torch
+torchvision
+foolbox
+numpy
+matplotlib
+scikit-image
+git+https://github.com/wielandbrendel/bag-of-local-features-models.git

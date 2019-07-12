@@ -79,6 +79,7 @@ def generate_heatmap_pytorch(model, image, target, patchsize):
     
     """
     import torch
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
     with torch.no_grad():
         # pad with zeros
@@ -88,7 +89,7 @@ def generate_heatmap_pytorch(model, image, target, patchsize):
         image = padded_image[None].astype(np.float32)
         
         # turn to torch tensor
-        input = torch.from_numpy(image).cuda()
+        input = torch.from_numpy(image).to(device)
         
         # extract patches
         patches = input.permute(0, 2, 3, 1)
@@ -101,8 +102,9 @@ def generate_heatmap_pytorch(model, image, target, patchsize):
         logits_list = []
 
         for batch_patches in torch.split(patches, 1000):
+            # logits is 1000(num patches) x 1000(num class labels)
             logits = model(batch_patches)
-            logits = logits[:, target][:, 0]
+            logits = logits[:, target]
             logits_list.append(logits.data.cpu().numpy().copy())
 
         logits = np.hstack(logits_list)

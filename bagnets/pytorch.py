@@ -15,6 +15,8 @@ model_urls = {
             'bagnet33': 'https://bitbucket.org/wielandbrendel/bag-of-feature-pretrained-models/raw/249e8fa82c0913623a807d9d35eeab9da7dcc2a8/bagnet32-2ddd53ed.pth.tar',
                             }
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class Bottleneck(nn.Module):
     expansion = 4
@@ -136,7 +138,8 @@ def bagnet33(pretrained=False, strides=[2, 2, 2, 1], **kwargs):
     """
     model = BagNet(Bottleneck, [3, 4, 6, 3], strides=strides, kernel3=[1,1,1,1], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['bagnet33']))
+        model.load_state_dict(model_zoo.load_url(model_urls['bagnet33'],
+                                                 map_location=device))
     return model
 
 def bagnet17(pretrained=False, strides=[2, 2, 2, 1], **kwargs):
@@ -147,7 +150,8 @@ def bagnet17(pretrained=False, strides=[2, 2, 2, 1], **kwargs):
     """
     model = BagNet(Bottleneck, [3, 4, 6, 3], strides=strides, kernel3=[1,1,1,0], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['bagnet17']))
+        model.load_state_dict(model_zoo.load_url(model_urls['bagnet17'],
+                                                 map_location=device))
     return model
 
 def bagnet9(pretrained=False, strides=[2, 2, 2, 1], **kwargs):
@@ -158,5 +162,6 @@ def bagnet9(pretrained=False, strides=[2, 2, 2, 1], **kwargs):
     """
     model = BagNet(Bottleneck, [3, 4, 6, 3], strides=strides, kernel3=[1,1,0,0], **kwargs)
     if pretrained:
-        model.load_state_dict(model_zoo.load_url(model_urls['bagnet9']))
+        model.load_state_dict(model_zoo.load_url(model_urls['bagnet9'],
+                                                 map_location=device))
     return model
